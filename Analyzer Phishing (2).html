@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phishing Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #e0f7ff;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: #0f172a;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0,255,200,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #00ffcc;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            resize: none;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 1px solid #00ffcc;
+            background: transparent;
+            color: #00ffcc;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00ffcc;
+            color: black;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
+        .result {
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Message / Link Analyzer</h1>
+
+    <textarea id="userInput" placeholder="Paste full message or link here..."></textarea>
+
+    <div class="btn-group">
+        <button onclick="analyze()">Analyze</button>
+        <button onclick="goBack()">⬅ Back</button>
+    </div>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+function analyze() {
+    let input = document.getElementById("userInput").value.toLowerCase();
+    let riskScore = 0;
+
+    if (input.includes("http://")) {
+        riskScore++;
+    }
+
+    let suspiciousWords = ["urgent", "verify", "blocked", "click here", "win", "free", "otp"];
+    suspiciousWords.forEach(word => {
+        if (input.includes(word)) {
+            riskScore++;
+        }
+    });
+
+    let shortLinks = ["bit.ly", "tinyurl", "shorturl", "goo.gl"];
+    shortLinks.forEach(link => {
+        if (input.includes(link)) {
+            riskScore++;
+        }
+    });
+
+    let result = document.getElementById("result");
+
+    if (riskScore === 0) {
+        result.innerText = "✅ Looks Safe (No major phishing signs detected)";
+        result.style.color = "#00ffcc";
+    } 
+    else if (riskScore <= 2) {
+        result.innerText = "⚠ Suspicious! Be careful before clicking.";
+        result.style.color = "orange";
+    } 
+    else {
+        result.innerText = "🚨 High Phishing Risk! Do NOT click.";
+        result.style.color = "red";
+    }
+}
+
+function goBack() {
+    window.location.href = "start.html";  
+}
+</script>
+<script src="script.js"></script>
+
+</body>
+</html>
